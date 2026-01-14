@@ -1,30 +1,19 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SkillCategory } from '@/types';
 import { skillCategories, aboutContent } from '@/data/config';
 import { cn } from '@/lib/utils';
+import { SkillsRadar } from './SkillsRadar';
+
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function AboutSection() {
     const containerRef = useRef<HTMLDivElement>(null);
-
-    useGSAP(() => {
-        gsap.from('.skill-category', {
-            y: 30,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.2,
-            scrollTrigger: {
-                trigger: containerRef.current,
-                start: 'top 80%',
-            }
-        });
-    }, { scope: containerRef });
 
     return (
         <section id="about" className="py-24 bg-gray-50 dark:bg-black/50">
@@ -39,20 +28,8 @@ export function AboutSection() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {skillCategories.map((category) => (
-                        <div key={category.id} className="skill-category bg-white dark:bg-white/5 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10">
-                            <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">{category.title}</h3>
-                            <ul className="space-y-2">
-                                {category.skills.map((skill) => (
-                                    <li key={skill} className="flex items-center text-gray-600 dark:text-gray-300">
-                                        <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2" />
-                                        {skill}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
+                <div className="bg-white dark:bg-white/5 rounded-2xl p-8 shadow-sm">
+                    <SkillsRadar />
                 </div>
             </div>
         </section>

@@ -9,15 +9,21 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/groq": "^3.0.8",
+    "@ai-sdk/openai": "^3.0.10",
+    "@ai-sdk/react": "^3.0.37",
     "@gsap/react": "^2.1.2",
     "@vercel/analytics": "^1.6.1",
+    "ai": "^6.0.34",
     "clsx": "^2.1.1",
     "gsap": "^3.14.2",
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-icons": "^5.5.0",
-    "tailwind-merge": "^3.4.0"
+    "recharts": "^3.6.0",
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

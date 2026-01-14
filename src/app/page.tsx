@@ -1,8 +1,11 @@
+'use client';
+
 import { HeroSection } from '@/components/HeroSection';
 import { ProjectsBentoSection } from '@/components/ProjectsBentoSection';
 import { FeaturedProjectSection } from '@/components/FeaturedProjectSection';
 import { AboutSection } from '@/components/AboutSection';
 import { ContactSection } from '@/components/ContactSection';
+import { ChatWidget } from '@/components/ChatWidget';
 import { projects } from '@/data/config';
 
 export default function Home() {
@@ -17,6 +20,8 @@ export default function Home() {
       <AboutSection />
 
       <ContactSection />
+
+      <ChatWidget />
     </main>
   );
 }

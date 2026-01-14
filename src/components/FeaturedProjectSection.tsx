@@ -140,8 +140,8 @@ function FeaturedProjectItem({ project, index }: { project: Project; index: numb
                         <div className="bg-gray-50 dark:bg-white/5 rounded-xl p-6 border border-gray-100 dark:border-white/10">
                             <h5 className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-3">Tech Stack</h5>
                             <div className="flex flex-wrap gap-2">
-                                {project.techStack.map(tech => (
-                                    <span key={tech} className="px-3 py-1 bg-white dark:bg-white/10 rounded-full text-sm shadow-sm border border-gray-200 dark:border-transparent">
+                                {project.techStack.map((tech, index) => (
+                                    <span key={`${tech}-${index}`} className="px-3 py-1 bg-white dark:bg-white/10 rounded-full text-sm shadow-sm border border-gray-200 dark:border-transparent">
                                         {tech}
                                     </span>
                                 ))}

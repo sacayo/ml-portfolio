@@ -5,6 +5,7 @@ export const siteConfig = {
     headline: "Data Scientist & AI/ML Engineer",
     subheadline: "Master's graduate from UC Berkeley with a strong foundation in machine learning, statistics, and data engineering. Building scalable AI systems, from RAG pipelines to classical ML prediction models",
     avatarUrl: "https://avatars.githubusercontent.com/u/142691524?v=4",
+    email: "sacayo@berkeley.edu",
 };
 
 export const aboutContent = {
@@ -36,19 +37,40 @@ export const socialLinks: SocialLink[] = [
 
 export const skillCategories: SkillCategory[] = [
     {
-        id: "AI/ML",
-        title: "Machine Learning & AI",
-        skills: ["Scikit-learn", "TensorFlow", "PyTorch", "XGBoost", "RAGAS", "LangChain", "Generative AI", "LLMs", "HuggingFace"],
+        id: "gen-ai",
+        title: "Large Language Models (LLMs)",
+        skills: ["Transformers", "RAG", "LangChain", "Prompt Engineering", "RAGAS", " Vertex AI", "OpenAI", "Claude", "Mistral"],
+        proficiency: 90,
+    },
+    {
+        id: "classic-ml",
+        title: "Classical ML",
+        skills: ["Scikit-learn", "XGBoost", "Classification", "Regression", "Clustering", "Logistic Regression", "Random Forest"],
+        proficiency: 85,
+    },
+    {
+        id: "deep-learning",
+        title: "Deep Learning",
+        skills: ["PyTorch", "TensorFlow", "Keras"],
+        proficiency: 70,
     },
     {
         id: "data-eng",
-        title: "Data Engineering & Big Data",
-        skills: ["PySpark", "Databricks", "SQL", "NoSQL (Neo4j)", "Docker", "AWS", "GCP", "Pinecone"],
+        title: "Data Engineering",
+        skills: ["PySpark", "Databricks", "SQL", "NoSQL", "PostgreSQL"],
+        proficiency: 75,
     },
     {
-        id: "analysis",
-        title: "Statistics & Analysis",
-        skills: ["Causal Inference", "Research Design", "A/B Testing", "R", "Experimentation"],
+        id: "mlops",
+        title: "MLOps & Cloud",
+        skills: ["AWS", "Docker", "EC2", "ECS", "Git Actions", "GCP"],
+        proficiency: 75,
+    },
+    {
+        id: "stats",
+        title: "Statistics & Inference",
+        skills: ["Causal Inference", "A/B Testing", "Experiment Design", "R"],
+        proficiency: 70,
     },
 ];
 
@@ -81,7 +103,7 @@ export const projects: Project[] = [
         problem: "Flight delays incur massive costs. Predicting them allows for proactive fleet management.",
         approach: "Utilized Bureau of Transportation Statistics data and Databricks' PySpark to train Logistic Regression, XGBoost, and Neural Network models on 90+ million rows of flight data.",
         results: "Identified key delay drivers and produced a deployable model for real-time risk assessment.",
-        techStack: ["PySpark", "Databricks", "XGBoost", "Neural Networks"],
+        techStack: ["PySpark", "Databricks", "XGBoost", "Neural Networks", "AWS" ],
         tags: ["Big Data", "Classification", "Aviation"],
         priority: 2,
         isFeatured: true, // Featured

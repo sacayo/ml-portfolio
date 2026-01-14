@@ -27,6 +27,7 @@ export interface SkillCategory {
   id: string;
   title: string;      // e.g., "RAG & Retrieval"
   skills: string[];   // e.g., ["BM25", "dense embeddings", "OpenSearch", "Pinecone"]
+  proficiency?: number; // 0-100 score for radar chart
 }
 
 export interface SocialLink {

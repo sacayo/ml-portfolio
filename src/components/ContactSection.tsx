@@ -11,8 +11,7 @@ export function ContactSection() {
             <div className="container mx-auto px-6 max-w-4xl text-center">
                 <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">Let's Connect</h2>
                 <p className="text-xl text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
-                    I'm currently looking for new opportunities in Data Science, AI/ML Engineering.
-                    Whether you have a question or just want to say hi, I'll try my best to get back to you!
+                    I'm currently looking for new opportunities in Data Science, AI/ML Engineering. Whether you have a question or just want to say hi, I'll try my best to get back to you!
                 </p>
 
                 <div className="flex flex-col items-center gap-8">
