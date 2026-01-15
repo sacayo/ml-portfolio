@@ -6,6 +6,12 @@ This document outlines potential enhancements for the ML Portfolio website.
 
 ## 🎯 High Impact
 
+### Selected Works / Bento Grid Section (Deferred)
+- **Status:** Component exists (`ProjectsBentoSection.tsx`) but removed from page
+- **Re-enable when:** You want a compact grid view of all projects
+- **Features:** Bento-style grid layout, filterable, quick view
+- **To re-enable:** Add `<ProjectsBentoSection projects={projects} />` back to `page.tsx`
+
 ### Blog/Articles Section
 - Create `/blog` route with MDX support
 - Write tutorials about ML projects
