@@ -93,19 +93,22 @@ function FeaturedProjectItem({ project, index }: { project: Project; index: numb
                         )}
                     </div>
 
-                    {/* Overlay Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60" />
+                    {/* Stronger Overlay Gradient for text readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
+                    {/* Tags at top */}
+                    <div className="absolute top-6 left-6 right-6 flex items-center gap-2 flex-wrap">
+                        {project.tags.map(tag => (
+                            <span key={tag} className="px-3 py-1 bg-black/50 backdrop-blur-md rounded-full text-xs font-medium text-white">
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+
+                    {/* Title and tagline at bottom */}
                     <div className="absolute bottom-8 left-8 right-8 text-white">
-                        <div className="flex items-center gap-3 mb-2">
-                            {project.tags.map(tag => (
-                                <span key={tag} className="px-2 py-1 bg-white/20 backdrop-blur-md rounded text-xs font-medium">
-                                    {tag}
-                                </span>
-                            ))}
-                        </div>
-                        <h3 className="text-3xl font-bold mb-2">{project.title}</h3>
-                        <p className="text-white/80">{project.shortTagline}</p>
+                        <h3 className="text-3xl font-bold mb-2 drop-shadow-lg">{project.title}</h3>
+                        <p className="text-white/90 drop-shadow-md">{project.shortTagline}</p>
                     </div>
                 </div>
             </div>

@@ -28,11 +28,11 @@ export function ProjectTile({ project, className }: ProjectTileProps) {
             {/* Background Thumbnail */}
             {project.assets?.thumbnail && (
                 <div className="absolute inset-0 z-0 select-none overflow-hidden">
-                    <div className="absolute inset-0 bg-white/90 dark:bg-black/80 z-10" />
+                    <div className="absolute inset-0 bg-white/95 dark:bg-black/90 z-10" />
                     <img
                         src={project.assets.thumbnail}
                         alt=""
-                        className="w-full h-full object-cover opacity-50 grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0 group-hover:opacity-100"
+                        className="w-full h-full object-cover opacity-30 grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0 group-hover:opacity-60"
                     />
                     {/* Re-add overlay on hover to ensure text readability if needed, or rely on z-10 bg */}
                 </div>
