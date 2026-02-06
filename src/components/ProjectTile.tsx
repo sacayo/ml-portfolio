@@ -6,96 +6,112 @@ import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import Link from 'next/link';
 import { trackEvent } from '@/lib/analytics';
 
+const tagGradients: Record<string, string> = {
+    'GenAI': 'from-cyan-500/20 to-blue-500/20',
+    'Big Data': 'from-orange-500/20 to-red-500/20',
+    'Deep Learning': 'from-purple-500/20 to-pink-500/20',
+    'A/B Testing': 'from-green-500/20 to-emerald-500/20',
+    'Graph Theory': 'from-yellow-500/20 to-amber-500/20',
+    'ML': 'from-indigo-500/20 to-violet-500/20',
+    'Statistics': 'from-teal-500/20 to-cyan-500/20',
+};
+
+function getGradient(tags: string[]): string {
+    for (const tag of tags) {
+        if (tagGradients[tag]) return tagGradients[tag];
+    }
+    return 'from-accent/10 to-secondary/10';
+}
+
 interface ProjectTileProps {
     project: Project;
     className?: string;
 }
 
 export function ProjectTile({ project, className }: ProjectTileProps) {
+    const gradient = getGradient(project.tags);
+
     return (
         <div
             className={cn(
-                'group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-white p-6 md:p-8 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 dark:bg-white/5 dark:border dark:border-white/10 dark:hover:border-white/20',
+                'group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-surface-elevated p-6 border border-border transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-accent/30 dark:bg-white/5 dark:border-white/10 dark:hover:border-accent/30',
                 className
             )}
+            onClick={() => trackEvent('project_click', project.id)}
         >
-            {/* Click overlay for whole card tracking/navigation (to be implemented) */}
-            <div
-                className="absolute inset-0 cursor-pointer z-0"
-                onClick={() => trackEvent('project_click', project.id)}
-            />
+            {/* Gradient header */}
+            <div className={cn("absolute top-0 left-0 right-0 h-32 bg-gradient-to-br opacity-60", gradient)} />
 
-            {/* Background Thumbnail */}
-            {project.assets?.thumbnail && (
-                <div className="absolute inset-0 z-0 select-none overflow-hidden">
-                    {/* Gradient overlay instead of solid block for better visibility */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-white/40 dark:from-black dark:via-black/80 dark:to-black/40 z-10" />
-                    <img
-                        src={project.assets.thumbnail}
-                        alt=""
-                        className="w-full h-full object-cover opacity-60 grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0 group-hover:opacity-100"
-                    />
-                    {/* Re-add overlay on hover to ensure text readability if needed, or rely on z-10 bg */}
-                </div>
+            {/* Featured badge */}
+            {project.isFeatured && (
+                <span className="absolute top-4 right-4 z-10 px-2 py-0.5 bg-accent/10 text-accent text-xs font-semibold rounded-full border border-accent/20">
+                    Featured
+                </span>
             )}
 
-            <div className="z-10 relative">
-                <div className="flex flex-wrap gap-2 mb-4">
+            <div className="z-10 relative pt-8">
+                <div className="flex flex-wrap gap-1.5 mb-3">
                     {project.tags.map((tag) => (
                         <span
                             key={tag}
-                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100/50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200"
+                            className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-accent"
                         >
                             {tag}
                         </span>
                     ))}
                 </div>
 
-                <h3 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-bold font-display tracking-tight text-text-primary mb-2">
                     {project.title}
                 </h3>
 
-                <p className="text-gray-600 dark:text-gray-300 mb-6 line-clamp-2">
+                <p className="text-sm text-text-secondary mb-4 line-clamp-2">
                     {project.impactStatement}
                 </p>
 
-                <div className="flex flex-wrap gap-2 mb-6">
-                    {project.techStack.slice(0, 4).map((tech) => (
-                        <span key={tech} className="text-xs text-gray-500 font-mono bg-gray-100 rounded px-2 py-1 dark:bg-white/10 dark:text-gray-400">
+                <div className="flex flex-wrap gap-1.5 mb-4">
+                    {project.techStack.slice(0, 3).map((tech) => (
+                        <span key={tech} className="text-xs text-text-muted font-mono bg-surface dark:bg-white/10 rounded px-2 py-0.5">
                             {tech}
                         </span>
                     ))}
-                    {project.techStack.length > 4 && (
-                        <span className="text-xs text-gray-500 font-mono px-1 py-1">+ {project.techStack.length - 4}</span>
+                    {project.techStack.length > 3 && (
+                        <span className="text-xs text-text-muted font-mono px-1">+{project.techStack.length - 3}</span>
                     )}
                 </div>
             </div>
 
-            <div className="z-10 relative mt-auto pt-4 flex items-center gap-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0">
+            {/* Always-visible links */}
+            <div className="z-10 relative mt-auto pt-3 flex items-center gap-3 border-t border-border">
+                <Link
+                    href={`/projects/${project.id}`}
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-accent hover:text-accent-dark transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    Details
+                </Link>
                 {project.links.github && (
                     <Link
                         href={project.links.github}
                         target="_blank"
-                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors dark:bg-white/10 dark:hover:bg-white/20 dark:text-white"
-                        onClick={(e) => e.stopPropagation()} // Prevent card click
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-text-secondary hover:text-accent transition-colors"
+                        onClick={(e) => e.stopPropagation()}
                     >
-                        <FaGithub className="w-5 h-5" />
+                        <FaGithub className="w-3.5 h-3.5" /> Code
                     </Link>
                 )}
                 {(project.links.demo || project.links.writeup) && (
                     <Link
                         href={project.links.demo || project.links.writeup || '#'}
                         target="_blank"
-                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors dark:bg-white/10 dark:hover:bg-white/20 dark:text-white"
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-text-secondary hover:text-accent transition-colors"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <FaExternalLinkAlt className="w-4 h-4" />
+                        <FaExternalLinkAlt className="w-3 h-3" />
+                        {project.links.demo ? 'Demo' : 'Case Study'}
                     </Link>
                 )}
             </div>
-
-            {/* Decorative gradient blob */}
-            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-gradient-to-br from-blue-500/10 to-purple-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
         </div>
     );
 }

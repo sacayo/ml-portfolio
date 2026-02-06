@@ -51,7 +51,7 @@ async function handleRequest(req: NextRequest) {
             }
         };
 
-        console.log('Analytics Event Received:', JSON.stringify(payload, null, 2));
+        // Analytics event processed (logging removed for security)
 
         // HERE: Insert into Vercel Postgres or other DB.
         // await sql`INSERT INTO visits ...`

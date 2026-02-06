@@ -30,8 +30,13 @@ const getSystemPrompt = () => {
         .map(cat => `${cat.title}: ${cat.skills.join(', ')}`)
         .join('\n');
 
-    const projectsContext = projects
-        .filter(p => p.isFeatured) // Focus on featured first
+    const featuredProjectsContext = projects
+        .filter(p => p.isFeatured)
+        .map(p => `- ${p.title}: ${p.impactStatement} (Tech: ${p.techStack.join(', ')})`)
+        .join('\n');
+
+    const otherProjectsContext = projects
+        .filter(p => !p.isFeatured)
         .map(p => `- ${p.title}: ${p.impactStatement} (Tech: ${p.techStack.join(', ')})`)
         .join('\n');
 
@@ -49,7 +54,10 @@ const getSystemPrompt = () => {
     ${skillsContext}
     
     FEATURED PROJECTS:
-    ${projectsContext}
+    ${featuredProjectsContext}
+
+    OTHER PROJECTS:
+    ${otherProjectsContext}
     
     CONTACT:
     Email: ${siteConfig.email || "sacayo@berkeley.edu"}
@@ -66,15 +74,10 @@ const getSystemPrompt = () => {
 };
 
 export async function POST(req: Request) {
-    console.log("----- API ROUTE CALLED -----");
-    console.log("Has Groq Key:", !!process.env.GROQ_API_KEY);
-
     const { messages } = await req.json();
-    console.log("Received messages:", messages?.length);
 
     // Convert UIMessage format to standard ModelMessage format
     const modelMessages = convertToModelMessages(messages);
-    console.log("Converted messages:", modelMessages);
 
     const result = streamText({
         model: groq('llama-3.1-8b-instant'),

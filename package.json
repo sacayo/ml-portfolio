@@ -14,6 +14,7 @@
     "@ai-sdk/react": "^3.0.37",
     "@gsap/react": "^2.1.2",
     "@vercel/analytics": "^1.6.1",
+    "@vercel/speed-insights": "^1.3.1",
     "ai": "^6.0.34",
     "clsx": "^2.1.1",
     "gsap": "^3.14.2",

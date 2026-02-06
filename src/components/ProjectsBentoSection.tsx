@@ -1,70 +1,59 @@
 'use client';
 
+import { useState } from 'react';
 import { Project } from '@/types';
 import { ProjectTile } from '@/components/ProjectTile';
 import { cn } from '@/lib/utils';
-import { useRef } from 'react';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface ProjectsBentoSectionProps {
     projects: Project[];
 }
 
+const categories = ['All', 'GenAI', 'Deep Learning', 'Big Data', 'Statistics', 'ML'];
+
 export function ProjectsBentoSection({ projects }: ProjectsBentoSectionProps) {
-    const containerRef = useRef<HTMLDivElement>(null);
+    const [activeFilter, setActiveFilter] = useState('All');
 
-    useGSAP(() => {
-        const tiles = gsap.utils.toArray('.project-tile');
-
-        gsap.from(tiles, {
-            y: 50,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            scrollTrigger: {
-                trigger: containerRef.current,
-                start: 'top 80%',
-            }
-        });
-    }, { scope: containerRef });
+    const filtered = activeFilter === 'All'
+        ? projects
+        : projects.filter(p => p.tags.some(t => t === activeFilter));
 
     return (
-        <section id="projects" className="py-24 px-6 md:px-0 bg-gray-50/50 dark:bg-black/50">
-            <div className="container mx-auto max-w-6xl" ref={containerRef}>
+        <section id="projects" className="py-24 px-6 bg-surface dark:bg-black/50">
+            <div className="container mx-auto max-w-6xl">
                 <div className="mb-12">
-                    <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Selected Work</h2>
-                    <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl">
-                        A collection of machine learning systems, from end-to-end RAG applications to flight delay predictions using big data cloud platforms.
+                    <h2 className="text-3xl md:text-5xl font-bold font-display tracking-tight mb-4">All Projects</h2>
+                    <p className="text-xl text-text-secondary max-w-2xl">
+                        A collection of machine learning systems, from end-to-end RAG applications to predictive models at scale.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[350px]">
-                    {projects.map((project, index) => {
-                        // Priority 1 gets 2x2 or 2x1 span
-                        const isPriority = project.priority === 1;
-                        const isSecondary = project.priority === 2;
+                {/* Filter tabs */}
+                <div className="flex flex-wrap gap-2 mb-10">
+                    {categories.map(cat => (
+                        <button
+                            key={cat}
+                            onClick={() => setActiveFilter(cat)}
+                            className={cn(
+                                "px-4 py-2 rounded-full text-sm font-medium transition-colors",
+                                activeFilter === cat
+                                    ? "bg-accent text-white"
+                                    : "bg-surface-elevated dark:bg-white/5 text-text-secondary hover:text-accent border border-border"
+                            )}
+                        >
+                            {cat}
+                        </button>
+                    ))}
+                </div>
 
-                        let gridClass = '';
-                        if (isPriority) {
-                            gridClass = 'md:col-span-2 md:row-span-2 lg:col-span-2 lg:row-span-1'; // Large tile on desktop
-                        } else if (isSecondary) {
-                            gridClass = 'md:col-span-1 md:row-span-1 lg:col-span-1 lg:row-span-1';
-                        } else {
-                            gridClass = 'col-span-1 row-span-1';
-                        }
-
-                        return (
-                            <ProjectTile
-                                key={project.id}
-                                project={project}
-                                className={cn('project-tile', gridClass)}
-                            />
-                        );
-                    })}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {filtered.map((project) => (
+                        <ProjectTile
+                            key={project.id}
+                            project={project}
+                            className="project-tile"
+                        />
+                    ))}
                 </div>
             </div>
         </section>

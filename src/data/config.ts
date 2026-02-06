@@ -6,6 +6,8 @@ export const siteConfig = {
     subheadline: "Master's graduate from UC Berkeley with a strong foundation in machine learning, statistics, and data engineering. Building scalable AI systems, from RAG pipelines to classical ML prediction models",
     avatarUrl: "https://avatars.githubusercontent.com/u/142691524?v=4",
     email: "sacayo@berkeley.edu",
+    roles: ["Data Scientist", "ML Engineer", "AI Systems Builder"],
+    statusBadge: { text: "Open to Opportunities", active: true },
 };
 
 export const aboutContent = {

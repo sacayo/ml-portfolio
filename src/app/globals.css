@@ -1,24 +1,88 @@
 @import "tailwindcss";
 
+/* ─── Design Tokens ─── */
 :root {
-  --background: #ffffff;
+  --background: #fafafa;
   --foreground: #171717;
-}
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Accent palette - Teal/Cyan */
+  --accent: #0EA5E9;
+  --accent-light: #38BDF8;
+  --accent-dark: #0284C7;
+  --accent-subtle: rgba(14, 165, 233, 0.08);
+
+  /* Secondary - Warm Amber */
+  --secondary: #F59E0B;
+  --secondary-light: #FBBF24;
+  --secondary-subtle: rgba(245, 158, 11, 0.08);
+
+  /* Surfaces */
+  --surface: #f5f5f5;
+  --surface-elevated: #ffffff;
+
+  /* Borders */
+  --border: #e5e7eb;
+
+  /* Text hierarchy */
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    --accent: #38BDF8;
+    --accent-light: #7DD3FC;
+    --accent-dark: #0EA5E9;
+    --accent-subtle: rgba(56, 189, 248, 0.1);
+
+    --secondary: #FBBF24;
+    --secondary-light: #FDE68A;
+    --secondary-subtle: rgba(251, 191, 36, 0.1);
+
+    --surface: #111111;
+    --surface-elevated: #1a1a1a;
+
+    --border: rgba(255, 255, 255, 0.1);
+
+    --text-primary: #f5f5f5;
+    --text-secondary: #a3a3a3;
+    --text-muted: #737373;
   }
 }
 
+/* ─── Register Tailwind Theme Tokens ─── */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-dark: var(--accent-dark);
+  --color-accent-subtle: var(--accent-subtle);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-light: var(--secondary-light);
+  --color-secondary-subtle: var(--secondary-subtle);
+
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+
+  --color-border: var(--border);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display);
+}
+
+/* ─── Base Styles ─── */
 html {
   scroll-behavior: smooth;
 }
@@ -26,5 +90,51 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display), system-ui, sans-serif;
+}
+
+/* ─── Utility Classes ─── */
+.text-gradient {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 50%, var(--secondary) 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 4s ease infinite;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@media (prefers-color-scheme: dark) {
+  .glass {
+    background: rgba(10, 10, 10, 0.7);
+  }
+}
+
+.dot-pattern {
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ─── Keyframe Animations ─── */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
 }

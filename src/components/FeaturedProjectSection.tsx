@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -16,20 +16,19 @@ interface FeaturedProjectSectionProps {
 }
 
 export function FeaturedProjectSection({ projects }: FeaturedProjectSectionProps) {
-    // Only show featured projects
     const featured = projects.filter(p => p.isFeatured);
 
     return (
-        <section id="featured" className="py-24 bg-white dark:bg-black">
+        <section id="featured" className="py-24 bg-surface-elevated dark:bg-black">
             <div className="container mx-auto px-6">
                 <div className="mb-20">
-                    <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Deep Dives</h2>
-                    <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl">
+                    <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 font-display">Deep Dives</h2>
+                    <p className="text-xl text-text-secondary max-w-2xl">
                         Detailed walkthroughs of high-impact systems.
                     </p>
                 </div>
 
-                <div className="space-y-64">
+                <div className="space-y-48">
                     {featured.map((project, index) => (
                         <FeaturedProjectItem key={project.id} project={project} index={index} />
                     ))}
@@ -43,23 +42,14 @@ function FeaturedProjectItem({ project, index }: { project: Project; index: numb
     const containerRef = useRef<HTMLDivElement>(null);
     const graphicRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
+    const reverse = index % 2 !== 0;
 
     useGSAP(() => {
-        // Media query for desktop only interactions
         const mm = gsap.matchMedia();
 
         mm.add("(min-width: 1024px)", () => {
-            // Pinning is handled by CSS sticky for smoother behavior
-            // ScrollTrigger.create({
-            //     trigger: containerRef.current,
-            //     start: "top center",
-            //     end: "bottom bottom",
-            //     pin: graphicRef.current,
-            //     pinSpacing: false,
-            // });
-
-            // Animate content sections in
-            gsap.utils.toArray('.content-step').forEach((step: any) => {
+            const steps = containerRef.current?.querySelectorAll('.content-step') || [];
+            steps.forEach((step: any) => {
                 gsap.from(step, {
                     y: 50,
                     opacity: 0,
@@ -76,12 +66,22 @@ function FeaturedProjectItem({ project, index }: { project: Project; index: numb
     }, { scope: containerRef });
 
     return (
-        <div ref={containerRef} className="flex flex-col lg:flex-row gap-12 lg:gap-20 min-h-screen">
+        <div
+            ref={containerRef}
+            className={cn(
+                "relative flex flex-col lg:flex-row gap-12 lg:gap-20 min-h-screen",
+                reverse && "lg:flex-row-reverse"
+            )}
+        >
+            {/* Project number indicator */}
+            <span className="absolute -top-12 left-0 text-[140px] font-bold text-accent/5 dark:text-accent/10 font-display select-none pointer-events-none leading-none">
+                {String(index + 1).padStart(2, '0')}
+            </span>
+
             {/* Sticky Graphic Side */}
             <div className="lg:w-1/2 lg:h-screen lg:flex lg:flex-col lg:justify-center lg:sticky lg:top-0">
-                <div ref={graphicRef} className="w-full aspect-video bg-gray-100 dark:bg-white/5 rounded-3xl overflow-hidden shadow-2xl border border-gray-200 dark:border-white/10 relative group">
-                    {/* Visual Placeholder or Image */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-indigo-500/5 to-fuchsia-500/5">
+                <div ref={graphicRef} className="w-full aspect-video bg-surface dark:bg-white/5 rounded-3xl overflow-hidden shadow-2xl border border-border relative group">
+                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-accent/5 to-secondary/5">
                         {project.assets?.thumbnail ? (
                             <img
                                 src={project.assets.thumbnail}
@@ -89,14 +89,12 @@ function FeaturedProjectItem({ project, index }: { project: Project; index: numb
                                 className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
                             />
                         ) : (
-                            <span className="text-gray-400 font-mono text-sm">{project.title} Architecture</span>
+                            <span className="text-text-muted font-mono text-sm">{project.title} Architecture</span>
                         )}
                     </div>
 
-                    {/* Stronger Overlay Gradient for text readability */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-                    {/* Tags at top */}
                     <div className="absolute top-6 left-6 right-6 flex items-center gap-2 flex-wrap">
                         {project.tags.map(tag => (
                             <span key={tag} className="px-3 py-1 bg-black/50 backdrop-blur-md rounded-full text-xs font-medium text-white">
@@ -105,9 +103,8 @@ function FeaturedProjectItem({ project, index }: { project: Project; index: numb
                         ))}
                     </div>
 
-                    {/* Title and tagline at bottom */}
                     <div className="absolute bottom-8 left-8 right-8 text-white">
-                        <h3 className="text-3xl font-bold mb-2 drop-shadow-lg">{project.title}</h3>
+                        <h3 className="text-3xl font-bold font-display mb-2 drop-shadow-lg">{project.title}</h3>
                         <p className="text-white/90 drop-shadow-md">{project.shortTagline}</p>
                     </div>
                 </div>
@@ -119,32 +116,32 @@ function FeaturedProjectItem({ project, index }: { project: Project; index: numb
 
                     {/* Step 1: Problem */}
                     <div className="content-step">
-                        <div className="mb-4 flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-mono text-sm">
+                        <div className="mb-4 flex items-center gap-2 text-accent font-mono text-sm">
                             <span className="w-6 h-px bg-current"></span>
                             01. THE PROBLEM
                         </div>
-                        <h4 className="text-2xl font-bold mb-4">Context & Challenge</h4>
-                        <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                        <h4 className="text-2xl font-bold font-display mb-4">Context & Challenge</h4>
+                        <p className="text-lg text-text-secondary leading-relaxed">
                             {project.problem}
                         </p>
                     </div>
 
                     {/* Step 2: Approach */}
                     <div className="content-step">
-                        <div className="mb-4 flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-mono text-sm">
+                        <div className="mb-4 flex items-center gap-2 text-accent font-mono text-sm">
                             <span className="w-6 h-px bg-current"></span>
                             02. THE APPROACH
                         </div>
-                        <h4 className="text-2xl font-bold mb-4">Architecture & Implementation</h4>
-                        <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+                        <h4 className="text-2xl font-bold font-display mb-4">Architecture & Implementation</h4>
+                        <p className="text-lg text-text-secondary leading-relaxed mb-6">
                             {project.approach}
                         </p>
 
-                        <div className="bg-gray-50 dark:bg-white/5 rounded-xl p-6 border border-gray-100 dark:border-white/10">
-                            <h5 className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-3">Tech Stack</h5>
+                        <div className="bg-surface dark:bg-white/5 rounded-xl p-6 border border-border">
+                            <h5 className="text-sm font-bold uppercase tracking-wider text-text-muted mb-3">Tech Stack</h5>
                             <div className="flex flex-wrap gap-2">
-                                {project.techStack.map((tech, index) => (
-                                    <span key={`${tech}-${index}`} className="px-3 py-1 bg-white dark:bg-white/10 rounded-full text-sm shadow-sm border border-gray-200 dark:border-transparent">
+                                {project.techStack.map((tech, i) => (
+                                    <span key={`${tech}-${i}`} className="px-3 py-1 bg-surface-elevated dark:bg-white/10 rounded-full text-sm shadow-sm border border-border dark:border-transparent">
                                         {tech}
                                     </span>
                                 ))}
@@ -154,36 +151,42 @@ function FeaturedProjectItem({ project, index }: { project: Project; index: numb
 
                     {/* Step 3: Results */}
                     <div className="content-step">
-                        <div className="mb-4 flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-mono text-sm">
+                        <div className="mb-4 flex items-center gap-2 text-accent font-mono text-sm">
                             <span className="w-6 h-px bg-current"></span>
                             03. RESULTS
                         </div>
-                        <h4 className="text-2xl font-bold mb-4">Impact & Metrics</h4>
-                        <div className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+                        <h4 className="text-2xl font-bold font-display mb-4">Impact & Metrics</h4>
+                        <div className="text-3xl md:text-4xl font-bold text-text-primary mb-6">
                             {project.impactStatement}
                         </div>
-                        <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-8">
+                        <p className="text-lg text-text-secondary leading-relaxed mb-8">
                             {project.results}
                         </p>
 
-                        <div className="flex gap-4">
+                        <div className="flex flex-wrap gap-4">
+                            <Link
+                                href={`/projects/${project.id}`}
+                                className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-full hover:bg-accent-dark transition-colors"
+                            >
+                                View Details <FaArrowRight className="text-sm" />
+                            </Link>
                             {project.links.github && (
                                 <Link
                                     href={project.links.github}
                                     target="_blank"
-                                    className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors dark:bg-white dark:text-black dark:hover:bg-gray-200"
+                                    className="inline-flex items-center gap-2 px-6 py-3 border border-border rounded-full hover:border-accent hover:text-accent transition-colors"
                                 >
-                                    <FaGithub /> View Code
+                                    <FaGithub /> Code
                                 </Link>
                             )}
                             {(project.links.demo || project.links.writeup) && (
                                 <Link
                                     href={project.links.demo || project.links.writeup || '#'}
                                     target="_blank"
-                                    className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors dark:border-gray-700 dark:text-white dark:hover:bg-white/10"
+                                    className="inline-flex items-center gap-2 px-6 py-3 border border-border rounded-full hover:border-accent hover:text-accent transition-colors"
                                 >
                                     <FaExternalLinkAlt className="text-sm" />
-                                    {project.links.demo ? 'Live Demo' : 'Read Case Study'}
+                                    {project.links.demo ? 'Demo' : 'Case Study'}
                                 </Link>
                             )}
                         </div>
