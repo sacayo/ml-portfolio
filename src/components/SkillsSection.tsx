@@ -35,9 +35,9 @@ function SkillCategoryCard({ category }: { category: SkillCategory }) {
             className="p-6 rounded-2xl bg-surface-elevated dark:bg-white/5 border border-border dark:border-white/10 cursor-pointer hover:border-accent/30 transition-all duration-300"
             onClick={() => setExpanded(!expanded)}
         >
-            <div className="flex items-center justify-between mb-3">
-                <h3 className="font-display font-bold text-lg text-text-primary">{category.title}</h3>
-                <span className="text-sm font-mono text-text-muted">{category.proficiency}%</span>
+            <div className="flex items-center justify-between gap-3 mb-3">
+                <h3 className="font-display font-bold text-lg text-text-primary min-w-0 truncate">{category.title}</h3>
+                <span className="text-sm font-mono text-text-muted shrink-0">{category.proficiency}%</span>
             </div>
 
             {/* Proficiency bar */}
