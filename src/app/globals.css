@@ -5,11 +5,11 @@
   --background: #fafafa;
   --foreground: #171717;
 
-  /* Accent palette - Teal/Cyan */
-  --accent: #0EA5E9;
-  --accent-light: #38BDF8;
-  --accent-dark: #0284C7;
-  --accent-subtle: rgba(14, 165, 233, 0.08);
+  /* Accent palette - Navy Blue */
+  --accent: #1D4ED8;
+  --accent-light: #3B82F6;
+  --accent-dark: #1E40AF;
+  --accent-subtle: rgba(29, 78, 216, 0.08);
 
   /* Secondary - Warm Amber */
   --secondary: #F59E0B;
@@ -34,10 +34,10 @@
     --background: #0a0a0a;
     --foreground: #ededed;
 
-    --accent: #38BDF8;
-    --accent-light: #7DD3FC;
-    --accent-dark: #0EA5E9;
-    --accent-subtle: rgba(56, 189, 248, 0.1);
+    --accent: #60A5FA;
+    --accent-light: #93C5FD;
+    --accent-dark: #3B82F6;
+    --accent-subtle: rgba(96, 165, 250, 0.1);
 
     --secondary: #FBBF24;
     --secondary-light: #FDE68A;
@@ -121,6 +121,14 @@ h1, h2, h3 {
 .dot-pattern {
   background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
   background-size: 24px 24px;
+}
+
+/* Override inline-code accent styling when code is inside a pre block */
+.markdown-content pre code {
+  color: inherit;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
 }
 
 /* ─── Keyframe Animations ─── */

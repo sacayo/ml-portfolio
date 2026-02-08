@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import Link from 'next/link';
 import { Project } from '@/types';
 import { FaGithub, FaExternalLinkAlt, FaArrowLeft, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { MarkdownContent } from '@/components/MarkdownContent';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -14,9 +15,10 @@ interface ProjectDetailContentProps {
     project: Project;
     prevProject: Project | null;
     nextProject: Project | null;
+    richContent: string | null;
 }
 
-export function ProjectDetailContent({ project, prevProject, nextProject }: ProjectDetailContentProps) {
+export function ProjectDetailContent({ project, prevProject, nextProject, richContent }: ProjectDetailContentProps) {
     const containerRef = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
@@ -89,56 +91,84 @@ export function ProjectDetailContent({ project, prevProject, nextProject }: Proj
                     </p>
                 </div>
 
-                {/* The Problem */}
-                <section className="animate-section mb-16">
-                    <div className="flex items-center gap-2 text-accent font-mono text-sm mb-4">
-                        <span className="w-8 h-px bg-current" />
-                        01. THE PROBLEM
-                    </div>
-                    <h2 className="text-2xl font-bold font-display mb-4">Context & Challenge</h2>
-                    <p className="text-lg text-text-secondary leading-relaxed">
-                        {project.problem}
-                    </p>
-                </section>
+                {richContent ? (
+                    <MarkdownContent content={richContent} />
+                ) : (
+                    <>
+                        {/* The Problem */}
+                        <section className="animate-section mb-16">
+                            <div className="flex items-center gap-2 text-accent font-mono text-sm mb-4">
+                                <span className="w-8 h-px bg-current" />
+                                01. THE PROBLEM
+                            </div>
+                            <h2 className="text-2xl font-bold font-display mb-4">Context & Challenge</h2>
+                            <p className="text-lg text-text-secondary leading-relaxed">
+                                {project.problem}
+                            </p>
+                        </section>
 
-                {/* The Approach */}
-                <section className="animate-section mb-16">
-                    <div className="flex items-center gap-2 text-accent font-mono text-sm mb-4">
-                        <span className="w-8 h-px bg-current" />
-                        02. THE APPROACH
-                    </div>
-                    <h2 className="text-2xl font-bold font-display mb-4">Architecture & Implementation</h2>
-                    <p className="text-lg text-text-secondary leading-relaxed mb-8">
-                        {project.approach}
-                    </p>
+                        {/* The Approach */}
+                        <section className="animate-section mb-16">
+                            <div className="flex items-center gap-2 text-accent font-mono text-sm mb-4">
+                                <span className="w-8 h-px bg-current" />
+                                02. THE APPROACH
+                            </div>
+                            <h2 className="text-2xl font-bold font-display mb-4">Architecture & Implementation</h2>
+                            <p className="text-lg text-text-secondary leading-relaxed mb-8">
+                                {project.approach}
+                            </p>
 
-                    {/* Tech Stack Grid */}
-                    <div className="bg-surface-elevated dark:bg-white/5 rounded-2xl p-6 border border-border">
-                        <h3 className="text-sm font-bold uppercase tracking-wider text-text-muted mb-4">Tech Stack</h3>
+                            {/* Tech Stack Grid */}
+                            <div className="bg-surface-elevated dark:bg-white/5 rounded-2xl p-6 border border-border">
+                                <h3 className="text-sm font-bold uppercase tracking-wider text-text-muted mb-4">Tech Stack</h3>
+                                <div className="flex flex-wrap gap-3">
+                                    {project.techStack.map((tech, i) => (
+                                        <span
+                                            key={`${tech}-${i}`}
+                                            className="px-4 py-2 bg-surface dark:bg-white/10 rounded-full text-sm font-medium border border-border dark:border-transparent"
+                                        >
+                                            {tech}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Results */}
+                        <section className="animate-section mb-16">
+                            <div className="flex items-center gap-2 text-accent font-mono text-sm mb-4">
+                                <span className="w-8 h-px bg-current" />
+                                03. RESULTS
+                            </div>
+                            <h2 className="text-2xl font-bold font-display mb-4">Impact & Metrics</h2>
+                            <p className="text-lg text-text-secondary leading-relaxed">
+                                {project.results}
+                            </p>
+                        </section>
+                    </>
+                )}
+
+                {/* Collaborators */}
+                {project.collaborators && project.collaborators.length > 0 && (
+                    <section className="animate-section mb-16">
+                        <div className="flex items-center gap-2 text-accent font-mono text-sm mb-4">
+                            <span className="w-8 h-px bg-current" />
+                            COLLABORATORS
+                        </div>
+                        <h2 className="text-2xl font-bold font-display mb-2">Team</h2>
+                        <p className="text-text-secondary mb-6">Built in collaboration with</p>
                         <div className="flex flex-wrap gap-3">
-                            {project.techStack.map((tech, i) => (
+                            {project.collaborators.map((name, i) => (
                                 <span
-                                    key={`${tech}-${i}`}
-                                    className="px-4 py-2 bg-surface dark:bg-white/10 rounded-full text-sm font-medium border border-border dark:border-transparent"
+                                    key={`${name}-${i}`}
+                                    className="px-4 py-2 bg-surface-elevated dark:bg-white/5 rounded-full text-sm font-medium border border-border"
                                 >
-                                    {tech}
+                                    {name}
                                 </span>
                             ))}
                         </div>
-                    </div>
-                </section>
-
-                {/* Results */}
-                <section className="animate-section mb-16">
-                    <div className="flex items-center gap-2 text-accent font-mono text-sm mb-4">
-                        <span className="w-8 h-px bg-current" />
-                        03. RESULTS
-                    </div>
-                    <h2 className="text-2xl font-bold font-display mb-4">Impact & Metrics</h2>
-                    <p className="text-lg text-text-secondary leading-relaxed">
-                        {project.results}
-                    </p>
-                </section>
+                    </section>
+                )}
 
                 {/* CTAs */}
                 <div className="animate-section flex flex-wrap gap-4 mb-20">

@@ -59,9 +59,9 @@ export function SkillsRadar() {
                         <Radar
                             name="Proficiency"
                             dataKey="A"
-                            stroke="#0284c7"
+                            stroke="#1E40AF"
                             strokeWidth={3}
-                            fill="#0EA5E9"
+                            fill="#1D4ED8"
                             fillOpacity={0.25}
                         />
                         <Tooltip content={<CustomTooltip />} />

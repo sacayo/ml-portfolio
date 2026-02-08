@@ -21,6 +21,7 @@ export interface Project {
     diagram?: string;         // architecture diagram
     sequenceFramesPrefix?: string; // optional path prefix for scroll sequence images
   };
+  collaborators?: string[];   // optional list of team member names
 }
 
 export interface SkillCategory {

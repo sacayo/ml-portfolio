@@ -40,8 +40,8 @@ export const socialLinks: SocialLink[] = [
 export const skillCategories: SkillCategory[] = [
     {
         id: "gen-ai",
-        title: "Large Language Models (LLMs)",
-        skills: ["Transformers", "RAG", "LangChain", "Prompt Engineering", "RAGAS", " Vertex AI", "OpenAI", "Claude", "Mistral"],
+        title: "Large Language Models",
+        skills: ["Transformers", "RAG", "LangChain", "Prompt Engineering", "RAGAS", " Vertex AI", "OpenAI", "Claude", "Mistral", "HuggingFace"],
         proficiency: 90,
     },
     {
@@ -54,25 +54,25 @@ export const skillCategories: SkillCategory[] = [
         id: "deep-learning",
         title: "Deep Learning",
         skills: ["PyTorch", "TensorFlow", "Keras"],
-        proficiency: 70,
+        proficiency: 80,
     },
     {
         id: "data-eng",
         title: "Data Engineering",
         skills: ["PySpark", "Databricks", "SQL", "NoSQL", "PostgreSQL"],
-        proficiency: 75,
+        proficiency: 80,
     },
     {
         id: "mlops",
         title: "MLOps & Cloud",
         skills: ["AWS", "Docker", "EC2", "ECS", "Git Actions", "GCP"],
-        proficiency: 75,
+        proficiency: 85,
     },
     {
         id: "stats",
         title: "Statistics & Inference",
         skills: ["Causal Inference", "A/B Testing", "Experiment Design", "R"],
-        proficiency: 70,
+        proficiency: 80,
     },
 ];
 
@@ -96,25 +96,7 @@ export const projects: Project[] = [
         assets: {
             thumbnail: "https://raw.githubusercontent.com/sacayo/Data-Science-Projects/main/rag-pipeline/assets/graph.png",
         },
-    },
-    {
-        id: "flight-delay",
-        title: "Southwest Airlines Flight Delay Prediction",
-        shortTagline: "PySpark at Scale",
-        impactStatement: "Estimated business outcome of $20 million in cost savings for Southwest Airlines.",
-        problem: "Flight delays incur massive costs. Predicting them allows for proactive fleet management.",
-        approach: "Utilized Bureau of Transportation Statistics data and Databricks' PySpark to train Logistic Regression, XGBoost, and Neural Network models on 90+ million rows of flight data.",
-        results: "Identified key delay drivers and produced a deployable model for real-time risk assessment.",
-        techStack: ["PySpark", "Databricks", "XGBoost", "Neural Networks", "AWS" ],
-        tags: ["Big Data", "Classification", "Aviation"],
-        priority: 2,
-        isFeatured: true, // Featured
-        links: {
-            github: "https://github.com/sacayo/Data-Science-Projects/tree/main/Flight-Delay-Prediction",
-        },
-        assets: {
-            thumbnail: "https://raw.githubusercontent.com/sacayo/Data-Science-Projects/main/Flight-Delay-Prediction/assets/W261_Phase_2_presentation.png",
-        },
+        collaborators: ["Kevin Yi", "Roz Huang", "Armaan Hiranandani", "Arthur Kang"],
     },
     {
         id: "rag-eval",
@@ -126,7 +108,7 @@ export const projects: Project[] = [
         results: "Improved response quality through systematic hyperparameter tuning and evaluation.",
         techStack: ["RAGAS", "RAG", "LLM", "Python", "HuggingFace", "LangChain", "Generative AI", "LLMs", "HuggingFace"],
         tags: ["GenAI", "Evaluation", "NLP"],
-        priority: 3,
+        priority: 2,
 
         isFeatured: true, // Featured
         links: {
@@ -135,6 +117,26 @@ export const projects: Project[] = [
         assets: {
             thumbnail: "https://raw.githubusercontent.com/sacayo/Data-Science-Projects/main/RAG-QA-System-Evaluation/assets/model-evalution-graph.png",
         },
+    },
+    {
+        id: "flight-delay",
+        title: "Southwest Airlines Flight Delay Prediction",
+        shortTagline: "PySpark at Scale",
+        impactStatement: "Estimated business outcome of $20 million in cost savings for Southwest Airlines.",
+        problem: "Flight delays incur massive costs. Predicting them allows for proactive fleet management.",
+        approach: "Utilized Bureau of Transportation Statistics data and Databricks' PySpark to train Logistic Regression, XGBoost, and Neural Network models on 90+ million rows of flight data.",
+        results: "Identified key delay drivers and produced a deployable model for real-time risk assessment.",
+        techStack: ["PySpark", "Databricks", "XGBoost", "Neural Networks", "AWS" ],
+        tags: ["Big Data", "Classification", "Aviation"],
+        priority: 3,
+        isFeatured: true, // Featured
+        links: {
+            github: "https://github.com/sacayo/Data-Science-Projects/tree/main/Flight-Delay-Prediction",
+        },
+        assets: {
+            thumbnail: "https://raw.githubusercontent.com/sacayo/Data-Science-Projects/main/Flight-Delay-Prediction/assets/W261_Phase_2_presentation.png",
+        },
+        collaborators: ["Ayushi Goel", "Louis Wu", "Licheng Zhong"],
     },
     {
         id: "google-return",
@@ -154,6 +156,7 @@ export const projects: Project[] = [
         assets: {
             thumbnail: "https://raw.githubusercontent.com/sacayo/Data-Science-Projects/main/Google-Customer-Return-Prediction/assets/207%20Project%20Presentation.png",
         },
+        collaborators: ["Diego Moss", "Jasmine Lau", "Roz Huang", "Connor Huh"],
     },
     {
         id: "youtube-ab",
