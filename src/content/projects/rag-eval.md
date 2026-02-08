@@ -33,13 +33,13 @@ The core insight: there's no single "best" RAG configuration. The optimal setup 
  │                                                                      │
  │  ┌────────────────────────────────────────────────────────────────┐  │
  │  │                     Document Corpus                            │  │
- │  │  ┌──────────┐  ┌──────────────┐  ┌────────────────────────┐  │    │
- │  │  │  ArXiv   │  │  Wikipedia   │  │  Technical Blogs       │  │    │
- │  │  │ 23 papers│  │  3 articles  │  │  5 blog posts          │  │    │
- │  │  │ (RAG,    │  │ (GenAI, IR,  │  │  (Lilian Weng:         │  │    │
- │  │  │  RLHF,   │  │  LLMs)       │  │   QA, Prompts,         │  │    │
- │  │  │  LoRA...)│  │              │  │   Attention, Agents)   │  │    │
- │  │  └──────────┘  └──────────────┘  └────────────────────────┘  │    │
+ │  │  ┌──────────┐  ┌──────────────┐  ┌────────────────────────┐    │  │
+ │  │  │  ArXiv   │  │  Wikipedia   │  │  Technical Blogs       │    │  │
+ │  │  │ 23 papers│  │  3 articles  │  │  5 blog posts          │    │  │
+ │  │  │ (RAG,    │  │ (GenAI, IR,  │  │  (Lilian Weng:         │    │  │
+ │  │  │  RLHF,   │  │  LLMs)       │  │   QA, Prompts,         │    │  │
+ │  │  │  LoRA...)│  │              │  │   Attention, Agents)   │    │  │
+ │  │  └──────────┘  └──────────────┘  └────────────────────────┘    │  │
  │  └────────────────────────┬───────────────────────────────────────┘  │
  │                           │                                          │
  │                           v                                          │

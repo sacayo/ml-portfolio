@@ -97,7 +97,7 @@ The system is composed of five independently deployable components, each optimiz
  │                                                                         │
  │  User Query ──> ┌──────────┐    ┌──────────┐    ┌──────────────┐        │
  │                 │  Embed   │───>│ Pinecone │───>│ Cross-Encoder│        │
- │  + Filters     │  Query   │    │ Retrieve │     │  Reranker    │        │
+ │  + Filters      │  Query   │    │ Retrieve │    │  Reranker    │        │
  │                 │(dense+   │    │ Top-100  │    │  → Top-5     │        │
  │                 │ sparse)  │    │          │    │              │        │
  │                 └──────────┘    └──────────┘    └──────┬───────┘        │
