@@ -37,30 +37,30 @@ The system is composed of five independently deployable components, each optimiz
  │  │ │processed/│ │    └──────┬───────┘    └───────────────────────┘  │
  │  │ └──────────┘ │           │                                       │
  │  └──────┬───────┘           │                                       │
- │         │                   ▼                                       │
+ │         │                   v                                       │
  │         │         ┌──────────────────┐                              │
- │         ├────────▶│   ECS Fargate    │──── Pipeline 1: PDF Extract  │
+ │         ├────────>│   ECS Fargate    │──── Pipeline 1: PDF Extract  │
  │         │         │  (CPU, 4GB RAM)  │                              │
  │         │         └────────┬─────────┘                              │
- │         │                  │ Parquet                                 │
- │         │                  ▼                                        │
+ │         │                  │ Parquet                                │
+ │         │                  v                                        │
  │         │         ┌──────────────────┐                              │
  │         │         │ Pinecone Embed   │──── Pipeline 2: Vectorize    │
  │         │         │  (Local/Batch)   │                              │
  │         │         └────────┬─────────┘                              │
- │         │                  │ Vectors                                 │
- │         │                  ▼                                        │
+ │         │                  │ Vectors                                │
+ │         │                  v                                        │
  │         │         ┌──────────────────┐       ┌────────────────────┐ │
- │         │         │  Pinecone DB     │◀─────▶│  EC2 g4dn.xlarge   │ │
+ │         │         │  Pinecone DB     │<─────>│  EC2 g4dn.xlarge   │ │
  │         │         │  (Serverless)    │       │  NVIDIA T4 GPU     │ │
  │         │         │  1024-dim dense  │       │  ┌──────────────┐  │ │
  │         │         │  + sparse BM25   │       │  │ Flask API    │  │ │
- │         │         └──────────────────┘       │  │ LLaMA 3.1 8B│  │ │
+ │         │         └──────────────────┘       │  │ LLaMA 3.1 8B │  │ │
  │         │                                    │  │ Reranker     │  │ │
  │         │                                    │  └──────┬───────┘  │ │
  │         │                                    └─────────┼──────────┘ │
  │         │                                              │            │
- │         │                                              ▼            │
+ │         │                                              v            │
  │         │                                    ┌────────────────────┐ │
  │         │                                    │ Elastic Beanstalk  │ │
  │         │                                    │ ┌──────────────┐   │ │
@@ -70,7 +70,7 @@ The system is composed of five independently deployable components, each optimiz
  │         │                                    └────────────────────┘ │
  └─────────┴───────────────────────────────────────────────────────────┘
                                      │
-                                ┌────▼────┐
+                                ┌────v────┐
                                 │  Users  │
                                 └─────────┘
 ```
@@ -80,37 +80,38 @@ The system is composed of five independently deployable components, each optimiz
 ```
  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
  │  Municode   │     │   PyMuPDF   │     │   Pinecone  │     │   Pinecone  │
- │  Web Crawler│────▶│   + OCR     │────▶│  Inference  │────▶│  Vector DB  │
+ │  Web Crawler│────>│   + OCR     │────>│  Inference  │────>│  Vector DB  │
  │  (Selenium) │     │  Extraction │     │    API      │     │  (Indexed)  │
  └─────────────┘     └─────────────┘     └─────────────┘     └──────┬──────┘
-                                                                     │
-      PDFs              Parquet             Dense + Sparse           │
-   from county        (chunked text,        embeddings with         │
-    websites         state/county tags)      metadata               │
-                                                                     │
- ┌───────────────────────────────────────────────────────────────────┘
- │
- ▼
- ┌─────────────────────────────────────────────────────────────────────┐
- │                     Query Pipeline (EC2 GPU)                        │
- │                                                                     │
- │  User Query ──▶ ┌──────────┐    ┌──────────┐    ┌──────────────┐  │
- │                 │  Embed   │───▶│ Pinecone │───▶│  Cross-Encoder│  │
- │  + Filters     │  Query   │    │ Retrieve │    │  Reranker     │  │
- │                 │(dense+   │    │ Top-100  │    │  → Top-5      │  │
- │                 │ sparse)  │    │          │    │               │  │
- │                 └──────────┘    └──────────┘    └──────┬───────┘  │
- │                                                        │          │
- │                                                        ▼          │
- │                                                 ┌──────────────┐  │
- │                                                 │  LLaMA 3.1   │  │
- │                                                 │  8B Instruct │  │
- │                                                 │  (4-bit NF4) │  │
- │                                                 └──────┬───────┘  │
- │                                                        │          │
- │                              JSON Response ◀───────────┘          │
- │                              (answer + chunks + metadata)         │
- └─────────────────────────────────────────────────────────────────────┘
+                                                                    v
+ ┌──────────────────────────────────────────────────────────────────────────┐
+ │     PDFs              Parquet             Dense + Sparse                 │
+ │  from county        (chunked text,        embeddings with                │
+ │   websites         state/county tags)      metadata                      │
+ │                                                                          │
+ └──────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 v
+ ┌─────────────────────────────────────────────────────────────────────────┐
+ │                     Query Pipeline (EC2 GPU)                            │
+ │                                                                         │
+ │  User Query ──> ┌──────────┐    ┌──────────┐    ┌──────────────┐        │
+ │                 │  Embed   │───>│ Pinecone │───>│ Cross-Encoder│        │
+ │  + Filters     │  Query   │    │ Retrieve │     │  Reranker    │        │
+ │                 │(dense+   │    │ Top-100  │    │  → Top-5     │        │
+ │                 │ sparse)  │    │          │    │              │        │
+ │                 └──────────┘    └──────────┘    └──────┬───────┘        │
+ │                                                        │                │
+ │                                                        v                │
+ │                                                 ┌──────────────┐        │
+ │                                                 │  LLaMA 3.1   │        │
+ │                                                 │  8B Instruct │        │
+ │                                                 │  (4-bit NF4) │        │
+ │                                                 └──────┬───────┘        │
+ │                                                        │                │
+ │                              JSON Response <───────────┘                │
+ │                              (answer + chunks + metadata)               │
+ └─────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Technical Deep Dive

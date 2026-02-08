@@ -33,37 +33,37 @@ The core insight: there's no single "best" RAG configuration. The optimal setup 
  │                                                                      │
  │  ┌────────────────────────────────────────────────────────────────┐  │
  │  │                     Document Corpus                            │  │
- │  │  ┌──────────┐  ┌──────────────┐  ┌────────────────────────┐  │  │
- │  │  │  ArXiv   │  │  Wikipedia   │  │  Technical Blogs       │  │  │
- │  │  │ 23 papers│  │  3 articles  │  │  5 blog posts          │  │  │
- │  │  │ (RAG,    │  │ (GenAI, IR,  │  │  (Lilian Weng:         │  │  │
- │  │  │  RLHF,   │  │  LLMs)       │  │   QA, Prompts,         │  │  │
- │  │  │  LoRA...)│  │              │  │   Attention, Agents)   │  │  │
- │  │  └──────────┘  └──────────────┘  └────────────────────────┘  │  │
+ │  │  ┌──────────┐  ┌──────────────┐  ┌────────────────────────┐  │    │
+ │  │  │  ArXiv   │  │  Wikipedia   │  │  Technical Blogs       │  │    │
+ │  │  │ 23 papers│  │  3 articles  │  │  5 blog posts          │  │    │
+ │  │  │ (RAG,    │  │ (GenAI, IR,  │  │  (Lilian Weng:         │  │    │
+ │  │  │  RLHF,   │  │  LLMs)       │  │   QA, Prompts,         │  │    │
+ │  │  │  LoRA...)│  │              │  │   Attention, Agents)   │  │    │
+ │  │  └──────────┘  └──────────────┘  └────────────────────────┘  │    │
  │  └────────────────────────┬───────────────────────────────────────┘  │
  │                           │                                          │
- │                           ▼                                          │
+ │                           v                                          │
  │  ┌─────────────────────────────────────────────────────────────────┐ │
  │  │              Configurable Pipeline Components                   │ │
  │  │                                                                 │ │
- │  │  Chunking ──▶ Embedding ──▶ Vector Store ──▶ Retriever ──▶ LLM │ │
+ │  │  Chunking ──> Embedding ──> Vector Store ──> Retriever ──> LLM  │ │
  │  │                                                                 │ │
- │  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────┐  ┌────────┐│ │
- │  │  │Recursive │  │multi-qa  │  │          │  │k=5 │  │Mistral ││ │
- │  │  │(128,256) │  │all-mpnet │  │  Qdrant  │  │k=10│  │7B      ││ │
- │  │  │Semantic  │  │MiniLM    │  │(in-mem)  │  │    │  │Cohere  ││ │
- │  │  │(Unstruct)│  │distilrob │  │          │  │    │  │        ││ │
- │  │  │          │  │GIST      │  │          │  │    │  │        ││ │
- │  │  └──────────┘  └──────────┘  └──────────┘  └────┘  └────────┘│ │
+ │  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────┐  ┌────────┐   │ │
+ │  │  │Recursive │  │multi-qa  │  │          │  │k=5 │  │Mistral │   │ │
+ │  │  │(128,256) │  │all-mpnet │  │  Qdrant  │  │k=10│  │7B      │   │ │
+ │  │  │Semantic  │  │MiniLM    │  │(in-mem)  │  │    │  │Cohere  │   │ │
+ │  │  │(Unstruct)│  │distilrob │  │          │  │    │  │        │   │ │
+ │  │  │          │  │GIST      │  │          │  │    │  │        │   │ │
+ │  │  └──────────┘  └──────────┘  └──────────┘  └────┘  └────────┘   │ │
  │  └────────────────────────┬────────────────────────────────────────┘ │
  │                           │                                          │
- │                           ▼                                          │
+ │                           v                                          │
  │  ┌─────────────────────────────────────────────────────────────────┐ │
  │  │                   Evaluation Layer                              │ │
  │  │                                                                 │ │
- │  │  Gold Dataset ──▶ RAGAS Metrics ──▶ Weighted Score ──▶ Ranking │ │
- │  │  (75 questions,    (Semantic Sim,    (0.4 SS + 0.4 BS          │ │
- │  │   dual answers)     BERTScore,         + 0.2 ROUGE)            │ │
+ │  │  Gold Dataset ──> RAGAS Metrics ──> Weighted Score ──> Ranking  │ │
+ │  │  (75 questions,    (Semantic Sim,    (0.4 SS + 0.4 BS           │ │
+ │  │   dual answers)     BERTScore,         + 0.2 ROUGE)             │ │
  │  │                     ROUGE-L)                                    │ │
  │  └─────────────────────────────────────────────────────────────────┘ │
  │                                                                      │
@@ -79,7 +79,7 @@ I tested 12 distinct configurations across 5 tunable dimensions:
                      │           Configuration Space               │
                      │                                             │
                      │  Embedding Models (5)                       │
-                     │  ├── multi-qa-mpnet-base-dot-v1  ◀── best  │
+                     │  ├── multi-qa-mpnet-base-dot-v1  <── best   │
                      │  ├── all-mpnet-base-v2                      │
                      │  ├── all-MiniLM-L6-v2                       │
                      │  ├── all-distilroberta-v1                   │
@@ -98,7 +98,7 @@ I tested 12 distinct configurations across 5 tunable dimensions:
                      │  └── k=10 (comprehensive context)           │
                      │                                             │
                      │  Audience (2)                               │
-                     │  ├── Research (technical prompt)             │
+                     │  ├── Research (technical prompt)            │
                      │  └── Marketing (business prompt)            │
                      └─────────────────────────────────────────────┘
 ```

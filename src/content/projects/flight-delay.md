@@ -32,14 +32,14 @@ The core question: can we predict whether a Southwest Airlines flight will be de
  │  └───────┬────────┘    └───────┬────────┘    └────────┬───────────┘  │
  │          │                     │                      │              │
  │          └──────────┬──────────┘                      │              │
- │                     ▼                                 │              │
+ │                     v                                 │              │
  │          ┌────────────────────┐                       │              │
- │          │   Data Join &      │◀──────────────────────┘              │
+ │          │   Data Join &      │<──────────────────────┘              │
  │          │   Enrichment       │                                      │
  │          │   (PySpark SQL)    │                                      │
  │          └────────┬───────────┘                                      │
  │                   │                                                  │
- │                   ▼                                                  │
+ │                   v                                                  │
  │          ┌────────────────────┐                                      │
  │          │ Feature Engineering│                                      │
  │          │ 40+ Features       │                                      │
@@ -49,7 +49,7 @@ The core question: can we predict whether a Southwest Airlines flight will be de
  │          │ - SW delay rates   │                                      │
  │          └────────┬───────────┘                                      │
  │                   │                                                  │
- │                   ▼                                                  │
+ │                   v                                                  │
  │          ┌────────────────────┐                                      │
  │          │  Train/Val/Test    │                                      │
  │          │  Time-Series Split │                                      │
@@ -57,17 +57,17 @@ The core question: can we predict whether a Southwest Airlines flight will be de
  │          │       / 2024       │                                      │
  │          └────────┬───────────┘                                      │
  │                   │                                                  │
- │       ┌───────────┼───────────┬──────────────┐                      │
- │       ▼           ▼           ▼              ▼                      │
- │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌───────────┐                │
- │  │Logistic │ │ XGBoost │ │  Dense  │ │Bidirection│                │
- │  │Regress. │ │(Spark)  │ │  Neural │ │   LSTM    │                │
- │  │Baseline │ │         │ │ Network │ │           │                │
- │  └────┬────┘ └────┬────┘ └────┬────┘ └─────┬─────┘                │
- │       │           │           │             │                       │
- │       └───────────┴───────────┴─────────────┘                       │
+ │       ┌───────────┼───────────┬──────────────┐                       │
+ │       v           v           v              v                       │
+ │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌───────────┐                   │
+ │  │Logistic │ │ XGBoost │ │  Dense  │ │Bidirection│                   │
+ │  │Regress. │ │(Spark)  │ │  Neural │ │   LSTM    │                   │
+ │  │Baseline │ │         │ │ Network │ │           │                   │
+ │  └────┬────┘ └────┬────┘ └────┬────┘ └─────┬─────┘                   │
+ │       │           │           │            │                         │
+ │       └───────────┴───────────┴────────────┘                         │
  │                          │                                           │
- │                          ▼                                           │
+ │                          v                                           │
  │               ┌────────────────────┐                                 │
  │               │   Model Comparison │                                 │
  │               │   F2 / Recall /    │                                 │
@@ -81,23 +81,23 @@ The core question: can we predict whether a Southwest Airlines flight will be de
 
 ```
  ┌──────────────┐      ┌──────────────┐      ┌──────────────────────────┐
- │ Bureau of    │      │ NOAA Weather │      │ Derived Features          │
+ │ Bureau of    │      │ NOAA Weather │      │ Derived Features         │
  │ Transporta-  │      │ Stations     │      │                          │
  │ tion Stats   │      │ (Hourly)     │      │ - 30-day rolling delay   │
- │              │      │              │      │   rates per airport       │
- │ 90M+ flight  │─────▶│ Wind, temp,  │─────▶│ - Aircraft delay rates   │
+ │              │      │              │      │   rates per airport      │
+ │ 90M+ flight  │─────>│ Wind, temp,  │─────>│ - Aircraft delay rates   │
  │ records      │ JOIN │ precip,      │      │ - Weather Z-scores       │
  │ 2015-2024    │      │ visibility   │      │ - Airport PageRank       │
  │              │      │              │      │ - SW-specific metrics    │
  └──────────────┘      └──────────────┘      └──────────────────────────┘
                                                         │
-                                                        ▼
-                                             ┌────────────────────┐
-                                             │ Final Dataset      │
-                                             │ 90M+ rows          │
-                                             │ 40+ features       │
-                                             │ Partitioned by year│
-                                             └────────────────────┘
+                                                        v
+                                             ┌──────────────────────────┐
+                                             │ Final Dataset            │
+                                             │ 90M+ rows                │
+                                             │ 40+ features             │
+                                             │ Partitioned by year      │
+                                             └──────────────────────────┘
 ```
 
 ### Feature Engineering Deep Dive

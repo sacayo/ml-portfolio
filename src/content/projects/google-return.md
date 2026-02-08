@@ -28,53 +28,53 @@ The fundamental modeling question: can you predict future behavior from a sequen
  │  Dynamic Features                     Stable Features            │
  │  (Time-Series: 13 months)             (User Averages)            │
  │                                                                  │
- │  ┌────────────────────┐               ┌──────────────────┐      │
- │  │  Month 1 features  │               │ Avg visits       │      │
- │  │  Month 2 features  │               │ Avg page views   │      │
- │  │  Month 3 features  │               │ Avg session time │      │
- │  │  ...               │               │ Avg transactions │      │
- │  │  Month 13 features │               │ Device type      │      │
- │  └─────────┬──────────┘               │ Traffic source   │      │
- │            │                          │ Browser          │      │
- │            ▼                          │ Location         │      │
- │  ┌────────────────────┐               └────────┬─────────┘      │
+ │  ┌────────────────────┐               ┌──────────────────┐       │
+ │  │  Month 1 features  │               │ Avg visits       │       │
+ │  │  Month 2 features  │               │ Avg page views   │       │
+ │  │  Month 3 features  │               │ Avg session time │       │
+ │  │  ...               │               │ Avg transactions │       │
+ │  │  Month 13 features │               │ Device type      │       │
+ │  └─────────┬──────────┘               │ Traffic source   │       │
+ │            │                          │ Browser          │       │
+ │            v                          │ Location         │       │
+ │  ┌────────────────────┐               └────────┬─────────┘       │
  │  │   Masking Layer    │                        │                 │
  │  │  (variable-length  │                        │                 │
  │  │   sequences)       │                        │                 │
  │  └─────────┬──────────┘                        │                 │
  │            │                                   │                 │
- │            ▼                                   │                 │
+ │            v                                   │                 │
  │  ┌────────────────────┐                        │                 │
  │  │   LSTM Layer       │                        │                 │
  │  │   (50 units)       │                        │                 │
  │  └─────────┬──────────┘                        │                 │
  │            │                                   │                 │
- │            ▼                                   │                 │
+ │            v                                   │                 │
  │  ┌────────────────────┐                        │                 │
  │  │   Dropout (0.2)    │                        │                 │
  │  └─────────┬──────────┘                        │                 │
  │            │                                   │                 │
  │            └───────────────┬───────────────────┘                 │
  │                            │                                     │
- │                            ▼                                     │
- │                 ┌────────────────────┐                            │
- │                 │   Concatenate      │                            │
- │                 │  (LSTM output +    │                            │
- │                 │   stable features) │                            │
- │                 └─────────┬──────────┘                            │
+ │                            v                                     │
+ │                 ┌────────────────────┐                           │
+ │                 │   Concatenate      │                           │
+ │                 │  (LSTM output +    │                           │
+ │                 │   stable features) │                           │
+ │                 └─────────┬──────────┘                           │
  │                           │                                      │
- │                           ▼                                      │
- │                 ┌────────────────────┐                            │
- │                 │   Dense (50)       │                            │
- │                 │   ReLU activation  │                            │
- │                 └─────────┬──────────┘                            │
+ │                           v                                      │
+ │                 ┌────────────────────┐                           │
+ │                 │   Dense (50)       │                           │
+ │                 │   ReLU activation  │                           │
+ │                 └─────────┬──────────┘                           │
  │                           │                                      │
- │                           ▼                                      │
- │                 ┌────────────────────┐                            │
- │                 │   Dense (1)        │                            │
- │                 │   Sigmoid          │                            │
- │                 │   → P(return)      │                            │
- │                 └────────────────────┘                            │
+ │                           v                                      │
+ │                 ┌────────────────────┐                           │
+ │                 │   Dense (1)        │                           │
+ │                 │   Sigmoid          │                           │
+ │                 │   → P(return)      │                           │
+ │                 └────────────────────┘                           │
  │                                                                  │
  │  Total Parameters: 50,255                                        │
  │  Inference Time: ~2ms per user                                   │
@@ -86,34 +86,34 @@ The fundamental modeling question: can you predict future behavior from a sequen
 
 ```
  ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
- │  Google BigQuery │     │  JSON Flattening  │     │  Feature         │
- │  (35GB raw data) │────▶│  & Aggregation    │────▶│  Engineering     │
- │                  │     │                   │     │  (27 features)   │
- │  Aug 2016 -      │     │  Nested GA data   │     │                  │
- │  Aug 2017        │     │  → flat tables    │     │  Numeric:        │
- │  (daily tables)  │     │  → monthly agg    │     │  visits, views,  │
- │                  │     │                   │     │  session quality │
+ │  Google BigQuery │     │  JSON Flattening  │    │  Feature         │
+ │  (35GB raw data) │────>│  & Aggregation    │───>│  Engineering     │
+ │                  │     │                   │    │  (27 features)   │
+ │  Aug 2016 -      │     │  Nested GA data   │    │                  │
+ │  Aug 2017        │     │  → flat tables    │    │  Numeric:        │
+ │  (daily tables)  │     │  → monthly agg    │    │  visits, views,  │
+ │                  │     │                   │    │  session quality │
  └──────────────────┘     └──────────────────┘     │                  │
-                                                    │  Categorical:    │
-                                                    │  device, source, │
-                                                    │  browser, OS,    │
-                                                    │  location        │
-                                                    └────────┬─────────┘
-                                                             │
-                                                             ▼
+                                                   │  Categorical:    │
+                                                   │  device, source, │
+                                                   │  browser, OS,    │
+                                                   │  location        │
+                                                   └────────┬─────────┘
+                                                            │          
+                                                            v
  ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
- │  Stratified      │     │  Class Balance   │◀────│  Sequence        │
- │  Train/Val/Test  │◀────│  (equal pos/neg) │     │  Creation        │
+ │  Stratified      │     │  Class Balance   │<────│  Sequence        │
+ │  Train/Val/Test  │<────│  (equal pos/neg) │     │  Creation        │
  │  60% / 20% / 20% │     │                  │     │                  │
- │                  │     │  Keep all returns │     │  [T1]            │
- └──────────────────┘     │  + equal non-ret  │     │  [T1, T2]        │
+ │                  │     │  Keep all returns│     │  [T1]            │
+ └──────────────────┘     │  + equal non-ret │     │  [T1, T2]        │
                           └──────────────────┘     │  [T1, T2, T3]    │
-                                                    │  ...              │
-                                                    │  [T1...T13]       │
-                                                    │                  │
-                                                    │  Prevents future │
-                                                    │  data leakage    │
-                                                    └──────────────────┘
+                                                   │  ...             │
+                                                   │  [T1...T13]      │
+                                                   │                  │
+                                                   │  Prevents future │
+                                                   │  data leakage    │
+                                                   └──────────────────┘
 ```
 
 ### Sequential Modeling: Why LSTM?

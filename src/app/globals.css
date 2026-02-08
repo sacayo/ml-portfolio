@@ -129,9 +129,8 @@ h1, h2, h3 {
   background: transparent;
   padding: 0;
   border-radius: 0;
-  font-size: inherit;       /* stops 0.9em shrink from inline code styling */
-  font-family: inherit;     /* uses pre's system monospace instead of Geist Mono */
-  letter-spacing: 0;        /* prevents any spacing drift */
+  font-family: inherit;   /* Use pre's system monospace, not Geist Mono */
+  font-size: inherit;     /* Don't shrink to 0.9em */
 }
 
 /* ─── Keyframe Animations ─── */
