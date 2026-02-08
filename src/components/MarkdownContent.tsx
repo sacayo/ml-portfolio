@@ -134,16 +134,10 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
             );
         },
 
-        code({ children, className, node }) {
-            // Block code: inside a <pre> tag (with or without language)
-            const isBlock = node?.parentNode?.type === 'element' &&
-                            (node.parentNode as unknown as { tagName: string }).tagName === 'pre';
-            if (isBlock) {
-                return <code className={className}>{children}</code>;
-            }
-            // Inline code
+        code({ children, className }) {
+            // Inline code styling; block code (inside <pre>) is overridden by CSS
             return (
-                <code className="px-1.5 py-0.5 rounded bg-accent-subtle text-accent font-mono text-[0.9em]">
+                <code className={`${className ?? ''} px-1.5 py-0.5 rounded bg-accent-subtle text-accent font-mono text-[0.9em]`}>
                     {children}
                 </code>
             );
