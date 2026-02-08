@@ -127,7 +127,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
         pre({ children }) {
             return (
                 <div className="overflow-x-auto mb-6 rounded-xl border border-border bg-white dark:bg-[#0a0a0a]">
-                    <pre className="p-5 text-sm font-mono leading-relaxed text-[#1a1a1a] dark:text-[#e0e0e0] overflow-x-auto">
+                    <pre className="p-5 text-sm leading-none text-[#1a1a1a] dark:text-[#e0e0e0] overflow-x-auto" style={{ fontFamily: "ui-monospace, 'SFMono-Regular', 'SF Mono', Menlo, Consolas, 'Liberation Mono', 'Courier New', monospace" }}>
                         {children}
                     </pre>
                 </div>
