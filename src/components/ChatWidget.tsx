@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { FaRobot, FaPaperPlane, FaTimes } from 'react-icons/fa';
 import { cn } from '@/lib/utils';
 import { siteConfig } from '@/data/config';
 import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
+import { getVisitorId, hasBeenSeen, markSeen } from '@/lib/visitor-id';
 
 const getMessageText = (msg: any): string => {
     if (msg.content) return msg.content;
@@ -22,21 +24,38 @@ const getMessageText = (msg: any): string => {
 export function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
     const [inputValue, setInputValue] = useState('');
+    const [isReturning, setIsReturning] = useState(false);
 
-    const { messages, sendMessage, status, setMessages } = useChat();
+    useEffect(() => {
+        setIsReturning(hasBeenSeen());
+        getVisitorId();
+        markSeen();
+    }, []);
+
+    const transport = useMemo(
+        () => new DefaultChatTransport({
+            api: '/api/chat',
+            body: () => ({ userId: getVisitorId() }),
+        }),
+        []
+    );
+
+    const { messages, sendMessage, status, setMessages } = useChat({ transport });
     const isLoading = status === 'streaming' || status === 'submitted';
 
     useEffect(() => {
-        if (messages.length === 0) {
-            setMessages([
-                {
-                    id: 'welcome',
-                    role: 'assistant',
-                    parts: [{ type: 'text', text: `Hi! I'm ${siteConfig.name.split(' ')[0]}'s AI Assistant. Ask me anything about his projects or experience!` }]
-                }
-            ] as any);
-        }
-    }, []);
+        if (messages.length !== 0) return;
+        const greeting = isReturning
+            ? `Welcome back! Ask me anything about ${siteConfig.name.split(' ')[0]}'s projects.`
+            : `Hi! I'm ${siteConfig.name.split(' ')[0]}'s AI Assistant. Ask me anything about his projects or experience!`;
+        setMessages([
+            {
+                id: 'welcome',
+                role: 'assistant',
+                parts: [{ type: 'text', text: greeting }]
+            }
+        ] as any);
+    }, [isReturning]);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const chatWindowRef = useRef<HTMLDivElement>(null);

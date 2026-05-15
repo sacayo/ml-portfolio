@@ -532,6 +532,22 @@ const SkillsRadar = dynamic(() => import('./SkillsRadar'), {
 
 ---
 
+## Memory layer (mem0)
+
+The chat assistant remembers visitors across sessions via [mem0](https://mem0.ai).
+
+**Setup:**
+1. Get an API key at https://app.mem0.ai/dashboard/api-keys
+2. Add to `.env.local`:
+   ```
+   MEM0_API_KEY=m0-your-key-here
+   ```
+3. `npm run dev`
+
+**How it works:** Each browser is assigned an anonymous UUID stored in `localStorage`. On every chat turn, the server searches mem0 for context tied to that UUID, injects it into the system prompt, and after the reply streams, stores the exchange back to mem0. If `MEM0_API_KEY` is unset, the chat falls back to stateless behavior automatically.
+
+---
+
 ## License
 
 MIT License - feel free to use this as a template for your own portfolio!

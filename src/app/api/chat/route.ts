@@ -1,6 +1,18 @@
 import { groq } from '@ai-sdk/groq';
 import { streamText } from 'ai';
 import { siteConfig, aboutContent, skillCategories, projects } from '@/data/config';
+import MemoryClient from 'mem0ai';
+
+export const runtime = 'nodejs';
+
+let _mem0: MemoryClient | null = null;
+function getMem0(): MemoryClient | null {
+    if (_mem0) return _mem0;
+    const apiKey = process.env.MEM0_API_KEY;
+    if (!apiKey) return null;
+    _mem0 = new MemoryClient({ apiKey });
+    return _mem0;
+}
 
 // Convert UIMessage format (parts array) to standard format (content string)
 const convertToModelMessages = (messages: any[]) => {
@@ -25,7 +37,7 @@ const convertToModelMessages = (messages: any[]) => {
 };
 
 // explicit cast to standard map for system prompt construction
-const getSystemPrompt = () => {
+const getSystemPrompt = (knownBlock: string | null = null) => {
     const skillsContext = skillCategories
         .map(cat => `${cat.title}: ${cat.skills.join(', ')}`)
         .join('\n');
@@ -69,20 +81,56 @@ const getSystemPrompt = () => {
     - Be enthusiastic about AI and Machine Learning.
     - If asked about a specific project not listed here, say you don't have details on that but suggest checking the GitHub.
     - Do not make up facts.
-    - 
+    ${knownBlock
+        ? `\n\nKNOWN ABOUT VISITOR (from prior chats):\n${knownBlock}\nGreet by name when natural and tailor answers to their interests.`
+        : `\n\nYou don't yet know who this visitor is. In your reply, naturally ask ONE open question (not every turn) to learn their name and role or company. Do not interrogate.`
+    }
   `;
 };
 
 export async function POST(req: Request) {
-    const { messages } = await req.json();
+    const { messages, userId } = await req.json();
 
     // Convert UIMessage format to standard ModelMessage format
     const modelMessages = convertToModelMessages(messages);
+    const latestUser = [...modelMessages].reverse().find(m => m.role === 'user')?.content ?? '';
+
+    // Retrieve relevant memories for this visitor
+    let knownBlock: string | null = null;
+    const mem0 = getMem0();
+    if (userId && mem0 && latestUser) {
+        try {
+            const res = await mem0.search(latestUser, {
+                filters: { user_id: userId },
+                topK: 5,
+            });
+            const hits = (res as any)?.results ?? res ?? [];
+            if (Array.isArray(hits) && hits.length) {
+                knownBlock = hits.map((m: any) => `- ${m.memory}`).join('\n');
+            }
+        } catch (e) {
+            console.error('[mem0.search] failed', e);
+        }
+    }
 
     const result = streamText({
         model: groq('llama-3.1-8b-instant'),
-        system: getSystemPrompt(),
+        system: getSystemPrompt(knownBlock),
         messages: modelMessages,
+        onFinish: async ({ text }) => {
+            if (!userId || !mem0 || !latestUser) return;
+            try {
+                await mem0.add(
+                    [
+                        { role: 'user', content: latestUser },
+                        { role: 'assistant', content: text },
+                    ],
+                    { userId }
+                );
+            } catch (e) {
+                console.error('[mem0.add] failed', e);
+            }
+        },
     });
 
     return result.toUIMessageStreamResponse();
